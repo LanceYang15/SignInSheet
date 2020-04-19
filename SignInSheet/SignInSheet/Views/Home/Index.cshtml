@@ -1,0 +1,147 @@
+﻿@model SignInSheet.Models.Signature
+@using System.Data.SqlClient;
+
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="text-center">
+    <h1>SIGN IN SHEET</h1>
+</div>
+
+
+
+<div style="text-align: center"> 
+
+    <div style="width: 50%; margin-left: auto; margin-right: auto;">
+
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "Form-Horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.firstName)
+                    @Html.TextBoxFor(m => m.firstName, new { @class = "form-control text-center", placeholder = "Enter First Name" })
+                    @Html.ValidationMessageFor(m => m.firstName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.lastName)
+                    @Html.TextBoxFor(m => m.lastName, new { @class = "form-control text-center", placeholder = "Enter Last Name" })
+                    @Html.ValidationMessageFor(m => m.lastName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.email)
+                    @Html.TextBoxFor(m => m.email, new { @class = "form-control text-center", placeholder = "Enter Email" })
+                    @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            
+
+            <div class="form-group">
+                <input type="submit" value="Sign" class="btn btn-default" />
+            </div>
+
+        }
+
+    </div>
+
+</div>
+
+
+@{
+    string dbName = "SignInSheet";
+    string count;
+
+    SqlConnection databaseConnection = new SqlConnection("Server=.; Database=" + dbName + "; Integrated Security=true");
+
+    try
+    {
+        databaseConnection.Open();
+        SqlCommand showData = new SqlCommand("SELECT COUNT(*)[total] FROM Signatures", databaseConnection);
+        using (showData)
+        {
+            SqlDataReader reader = showData.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    count = $"{reader["total"]}";
+
+                    <div class="text-center">
+                        <h1 style="margin-top:4%">@count : SIGNED IN</h1>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div>FIRST NAME</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>LAST NAME</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>EMAIL</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        databaseConnection.Close();
+    }
+    catch (Exception e)
+    {
+
+    }
+}
+
+
+
+@{
+    string id;
+    string firstName;
+    string lastName;
+    string email;
+
+    try
+    {
+        databaseConnection.Open();
+        SqlCommand showData = new SqlCommand("SELECT * FROM Signatures", databaseConnection);
+        using (showData)
+        {
+            SqlDataReader reader = showData.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    id = $"{reader["id"]}";
+                    firstName = $"{reader["firstName"]}";
+                    lastName = $"{reader["lastName"]}";
+                    email = $"{reader["email"]}";
+
+                    <div class="row text-center">
+                        <hr />
+                        <div class="col-md-4">
+                            <div>@firstName</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>@lastName</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>@email</div>
+                        </div>            
+                    </div>
+
+                }
+            }
+        }
+        databaseConnection.Close();
+    }
+    catch (Exception e)
+    {
+
+    }
+
+}
