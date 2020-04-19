@@ -1,4 +1,6 @@
 # SignInSheet
+This is a ASP.net application
+
 A sign in sheet is a form used to record attendance. Its primary purpose is documentation and security. This website is able to record users who enter their information through a form such as first name, last name, and email address. Once submitted it will add the user to the display and increase the total amount of users that have signed.
 
 ## Key Features
